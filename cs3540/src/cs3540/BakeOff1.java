@@ -1,11 +1,13 @@
 package cs3540;
 
 import java.awt.AWTException;
+import java.awt.MouseInfo;
 import java.awt.Rectangle;
 import java.awt.Robot;
 import java.util.ArrayList;
 import java.util.Collections;
 import processing.core.PApplet;
+import processing.core.PVector;
 
 public class BakeOff1 extends PApplet {
 	// when in doubt, consult the Processsing reference:
@@ -174,5 +176,28 @@ public class BakeOff1 extends PApplet {
 		// can use the keyboard if you wish
 		// https://processing.org/reference/keyTyped_.html
 		// https://processing.org/reference/keyCode.html
+		
+	}
+	
+	/* Snap the mouse in the direction given by dir.
+	 * dir is a PVector of unit length meaning that all values are -1,0,1
+	 * for both the x and y values
+	 * Example call to move right would be would be mouseSnap(new PVector(1.0f,0.0f));
+	 */
+	public void mouseSnap(PVector dir) {
+		int stepSize = 90;
+		int unitX = (MouseInfo.getPointerInfo().getLocation().x-230)/stepSize;
+		int remX = (MouseInfo.getPointerInfo().getLocation().x-230)%stepSize;
+		if(remX >stepSize/2) {
+			unitX++;
+		}
+		int unitY = (MouseInfo.getPointerInfo().getLocation().y-250)/stepSize;
+		int remY = (MouseInfo.getPointerInfo().getLocation().y-250)%stepSize;
+		if(remY >stepSize/2) {
+			unitY++;
+		}
+		unitX += dir.x;
+		unitY+= dir.y;
+		robot.mouseMove(230+(90*unitX), 250+(90*unitY));
 	}
 }
