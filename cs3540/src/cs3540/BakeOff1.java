@@ -173,16 +173,24 @@ public class BakeOff1 extends PApplet {
 	}
 
 	public void keyPressed() {
-		// can use the keyboard if you wish
-		// https://processing.org/reference/keyTyped_.html
-		// https://processing.org/reference/keyCode.html
-		
+		if (trialNum >= trials.size()) // Check if the test is over
+			return;
+
+		if (keyCode == UP) {
+			moveCursorToNextSquare(0, -1); // Move the cursor up
+		} else if (keyCode == DOWN) {
+			moveCursorToNextSquare(0, 1); // Move the cursor down
+		} else if (keyCode == LEFT) {
+			moveCursorToNextSquare(-1, 0); // Move the cursor left
+		} else if (keyCode == RIGHT) {
+			moveCursorToNextSquare(1, 0); // Move the cursor right
+		}
 	}
 	
 	/* Snap the mouse in the direction given by dir.
 	 * dir is a PVector of unit length meaning that all values are -1,0,1
 	 * for both the x and y values
-	 * Example call to move right would be would be mouseSnap(new PVector(1.0f,0.0f));
+	 * Example call to move right would be mouseSnap(new PVector(1.0f,0.0f));
 	 */
 	public void mouseSnap(PVector dir) {
 		int stepSize = 90;
@@ -199,5 +207,27 @@ public class BakeOff1 extends PApplet {
 		unitX += dir.x;
 		unitY+= dir.y;
 		robot.mouseMove(230+(90*unitX), 250+(90*unitY));
+	}
+
+	// Method to move the cursor to the next square
+	void moveCursorToNextSquare(int dx, int dy) {
+		int squareSize = padding + buttonSize; // Calculate the size of each square
+		int gridWidth = 4; // Number of squares in each row
+		int gridHeight = 4; // Number of squares in each column
+
+		// Get the current position of the cursor
+		int currentX = MouseInfo.getPointerInfo().getLocation().x;
+		int currentY = MouseInfo.getPointerInfo().getLocation().y;
+
+		// Calculate the new position of the cursor
+		int newX = currentX + dx * squareSize;
+		int newY = currentY + dy * squareSize;
+
+		// Ensure the new position stays within the bounds of the button grid
+		newX = constrain(newX, margin, margin + gridWidth * squareSize);
+		newY = constrain(newY, margin, margin + gridHeight * squareSize);
+
+		// Use the robot to move the cursor to the new position
+		robot.mouseMove(newX, newY);
 	}
 }
