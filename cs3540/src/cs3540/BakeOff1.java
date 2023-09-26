@@ -154,8 +154,15 @@ public class BakeOff1 extends PApplet {
 	public void drawButton(int i) {
 		Rectangle bounds = getButtonLocation(i);
 
-		if (trials.get(trialNum) == i) // see if current button is the target
+		if (trialNum == trials.size() - 1)
+			if (trials.get(trialNum) == i)
+				fill(0, 255, 255);
+			else
+				fill(200);
+		else if (trials.get(trialNum) == i) // see if current button is the target
 			fill(0, 255, 255); // if so, fill cyan
+		else if (trials.get(trialNum + 1) == i)
+			fill(4, 129, 134);
 		else
 			fill(200); // if not, fill gray
 
