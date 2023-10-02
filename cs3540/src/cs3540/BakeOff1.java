@@ -188,13 +188,17 @@ public class BakeOff1 extends PApplet {
 			return;
 
 		if (keyCode == UP) {
-			moveCursorToNextSquare(0, -1); // Move the cursor up
+			//moveCursorToNextSquare(0, -1); // Move the cursor up
+			mouseSnap(new PVector(0, -1)); 
 		} else if (keyCode == DOWN) {
-			moveCursorToNextSquare(0, 1); // Move the cursor down
+			//moveCursorToNextSquare(0, 1); // Move the cursor down
+			mouseSnap(new PVector(0, 1));
 		} else if (keyCode == LEFT) {
-			moveCursorToNextSquare(-1, 0); // Move the cursor left
+			mouseSnap(new PVector(-1, 0));
+//			moveCursorToNextSquare(-1, 0); // Move the cursor left
 		} else if (keyCode == RIGHT) {
-			moveCursorToNextSquare(1, 0); // Move the cursor right
+			mouseSnap(new PVector(1, 0));
+//			moveCursorToNextSquare(1, 0); // Move the cursor right
 		}
 	}
 	
