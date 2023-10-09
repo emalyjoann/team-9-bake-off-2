@@ -18,9 +18,9 @@ public class BakeOff1 extends PApplet {
 		PApplet.main("cs3540.BakeOff1");
 	}
 
-	int margin = 200; // set the margin around the squares
-	final int padding = 50; // padding between buttons and also their width/height
-	final int buttonSize = 40; // padding between buttons and also their width/height
+	int margin = 20; // set the margin around the squares
+	int padding = 50; // padding between buttons and also their width/height
+	int buttonSize = 40; // padding between buttons and also their width/height
 	ArrayList<Integer> trials = new ArrayList<Integer>(); // contains the order of buttons that activate in the test
 	int trialNum = 0; // the current trial number (indexes into trials array above)
 	int startTime = 0; // time starts when the first click is captured
@@ -28,8 +28,11 @@ public class BakeOff1 extends PApplet {
 	int hits = 0; // number of successful clicks
 	int misses = 0; // number of missed clicks
 	Robot robot; // initialized in setup
+	int participantID = 0; //Jared:0 Emma:1 Isaac:2 
+	PVector startPos = new PVector();
+	int trialTimeStart =0;
 
-	int numRepeats = 1; // sets the number of times each button repeats in the test
+	int numRepeats = 10; // sets the number of times each button repeats in the test
 
 	/**
 	 * https://processing.org/reference/settings_.html#:~:text=The%20settings()%20method%20runs,commands%20in%20the%20Processing%20API.
@@ -42,6 +45,8 @@ public class BakeOff1 extends PApplet {
 	 * // https://processing.org/reference/setup_.html
 	 */
 	public void setup() {
+		startPos = new PVector(mouseX,mouseY);
+		trialTimeStart = millis();
 		// noCursor(); // hides the system cursor if you want
 		noStroke(); // turn off all strokes, we're just using fills here (can change this if you
 					// want)
@@ -110,7 +115,10 @@ public class BakeOff1 extends PApplet {
 			return;
 
 		if (trialNum == 0) // check if first click, if so, record start time
-			startTime = millis();
+			{
+				startTime = millis();
+				//trialTimeStart = startTime;
+			}
 
 		if (trialNum == trials.size() - 1) // check if final click
 		{
@@ -121,18 +129,50 @@ public class BakeOff1 extends PApplet {
 
 		Rectangle bounds = getButtonLocation(trials.get(trialNum));
 
+		int hit = 0;
 		// check to see if cursor was inside button
 		if ((mouseX > bounds.x && mouseX < bounds.x + bounds.width)
 				&& (mouseY > bounds.y && mouseY < bounds.y + bounds.height)) // test to see if hit was within bounds
 		{
-			System.out.println("HIT! " + trialNum + " " + (millis() - startTime)); // success
+			//System.out.println("HIT! " + trialNum + " " + (millis() - startTime)); // success
 			hits++;
+			hit = 1;
 		} else {
-			System.out.println("MISSED! " + trialNum + " " + (millis() - startTime)); // fail
+			//System.out.println("MISSED! " + trialNum + " " + (millis() - startTime)); // fail
 			misses++;
 		}
+		
+		/*
+		 * 
+		 * a) Trial number (increments with each button click)
+b) Participant ID (Assign everyone on your team a number, 1 through 4)
+c) X position of the cursor at beginning of trial (in pixels)
+d) Y position of the cursor at beginning of trial (in pixels)
+e) X position of the center of the target (in pixels)
+f) Y position of the center of the target (in pixels)
+g) Width of target (in pixels) 
+h) Time taken (in seconds, e.g., 0.653)
+i) Whether they clicked the target successfully (true of false, 0 or 1, or some similar encoding) 
+		 * 
+		 */
+		
+		float timeTaken = (millis()-trialTimeStart);
+		timeTaken/=1000; //Convert ms to S
+		System.out.printf("%d,%d,%.0f,%.0f,%d,%d,%d,%.3f,%d\n", 
+				trialNum,participantID,startPos.x,startPos.y,bounds.x,bounds.y,bounds.height,
+				timeTaken ,hit);
+		startPos = new PVector(mouseX,mouseY);
+		trialTimeStart = millis();
 
 		trialNum++; // Increment trial number
+		if(trialNum%20 ==0) {
+			padding++;	
+			System.out.println("Padding incresed");
+		}
+		if(trialNum%5==0) {
+			buttonSize++;			
+		}
+		
 
 		// in this example design, I move the cursor back to the middle after each click
 		// Note. When running from eclipse the robot class affects the whole screen not
@@ -183,24 +223,24 @@ public class BakeOff1 extends PApplet {
 		// https://processing.org/reference/mouseDragged_.html
 	}
 
-	public void keyPressed() {
-		if (trialNum >= trials.size()) // Check if the test is over
-			return;
-
-		if (keyCode == UP) {
-			//moveCursorToNextSquare(0, -1); // Move the cursor up
-			mouseSnap(new PVector(0, -1)); 
-		} else if (keyCode == DOWN) {
-			//moveCursorToNextSquare(0, 1); // Move the cursor down
-			mouseSnap(new PVector(0, 1));
-		} else if (keyCode == LEFT) {
-			mouseSnap(new PVector(-1, 0));
-//			moveCursorToNextSquare(-1, 0); // Move the cursor left
-		} else if (keyCode == RIGHT) {
-			mouseSnap(new PVector(1, 0));
-//			moveCursorToNextSquare(1, 0); // Move the cursor right
-		}
-	}
+//	public void keyPressed() {
+//		if (trialNum >= trials.size()) // Check if the test is over
+//			return;
+//
+//		if (keyCode == UP) {
+//			//moveCursorToNextSquare(0, -1); // Move the cursor up
+//			mouseSnap(new PVector(0, -1)); 
+//		} else if (keyCode == DOWN) {
+//			//moveCursorToNextSquare(0, 1); // Move the cursor down
+//			mouseSnap(new PVector(0, 1));
+//		} else if (keyCode == LEFT) {
+//			mouseSnap(new PVector(-1, 0));
+////			moveCursorToNextSquare(-1, 0); // Move the cursor left
+//		} else if (keyCode == RIGHT) {
+//			mouseSnap(new PVector(1, 0));
+////			moveCursorToNextSquare(1, 0); // Move the cursor right
+//		}
+//	}
 	
 	/* Snap the mouse in the direction given by dir.
 	 * dir is a PVector of unit length meaning that all values are -1,0,1
