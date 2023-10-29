@@ -91,6 +91,8 @@ public class BakeOff2 extends PApplet {
             strokeWeight(3f);
             if (trialIndex == i)
                 stroke(255, 0, 0, 192); // set color to semi translucent
+            else if (trialIndex < trialCount && trialIndex + 1 == i)
+                stroke(255, 255, 255);
             else
                 stroke(128, 128, 128, 128); // set color to semi-translucent
             rect(0, 0, d.z, d.z);
