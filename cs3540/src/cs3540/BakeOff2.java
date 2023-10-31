@@ -121,15 +121,14 @@ public class BakeOff2 extends PApplet {
             logoZ = constrain(logoZ - inchToPix(.02f), (float) .01,
                      inchToPix(4f));
         }
-
-        switch (key) {
-            case ' ':
-                logoZ = constrain(logoZ + inchToPix(.02f), (float) .01,
+        else if (key == ENTER)
+        {
+            logoY += inchToPix(.02f);
+        }
+        else if (key == ' ')
+        {
+            logoZ = constrain(logoZ + inchToPix(.02f), (float) .01,
                      inchToPix(4f));
-                break;
-        
-            default:
-                break;
         }
     }
     // // my example design for control, which is terrible
