@@ -1,6 +1,7 @@
 package cs3540;
 import java.util.ArrayList;
 import java.util.Collections;
+
 import processing.core.PApplet;
 public class BakeOff2 extends PApplet {
     // these are variables you should probably leave alone
@@ -90,6 +91,8 @@ public class BakeOff2 extends PApplet {
             strokeWeight(3f);
             if (trialIndex == i)
                 stroke(255, 0, 0, 192); // set color to semi translucent
+            else if (trialIndex < trialCount && trialIndex + 1 == i)
+                stroke(255, 255, 255);
             else
                 stroke(128, 128, 128, 128); // set color to semi-translucent
             rect(0, 0, d.z, d.z);
@@ -105,49 +108,69 @@ public class BakeOff2 extends PApplet {
         popMatrix();
         // ===========DRAW EXAMPLE CONTROLS=================
         fill(255);
-        scaffoldControlLogic(); // you are going to want to replace this!
+        //scaffoldControlLogic(); // you are going to want to replace this!
+        keyPressed();
         text("Trial " + (trialIndex + 1) + " of " + trialCount, width / 2,
                 inchToPix(.8f));
     }
-    // my example design for control, which is terrible
-    void scaffoldControlLogic() {
-        // upper left corner, rotate counterclockwise
-        text("CCW", inchToPix(.4f), inchToPix(.4f));
-        if (mousePressed && dist(0, 0, mouseX, mouseY) < inchToPix(.8f))
-            logoRotation--;
-        // upper right corner, rotate clockwise
-        text("CW", width - inchToPix(.4f), inchToPix(.4f));
-        if (mousePressed && dist(width, 0, mouseX, mouseY) < inchToPix(.8f))
-            logoRotation++;
-        // lower left corner, decrease Z
-        text("-", inchToPix(.4f), height - inchToPix(.4f));
-        if (mousePressed && dist(0, height, mouseX, mouseY) < inchToPix(.8f))
+
+    public void keyPressed()
+    {
+        if(keyPressed && keyCode == SHIFT)
+        {
             logoZ = constrain(logoZ - inchToPix(.02f), (float) .01,
-                    inchToPix(4f)); // leave min and max alone!
-        // lower right corner, increase Z
-        text("+", width - inchToPix(.4f), height - inchToPix(.4f));
-        if (mousePressed && dist(width, height, mouseX, mouseY) <
-                inchToPix(.8f))
-            logoZ = constrain(logoZ + inchToPix(.02f), (float) .01,
-                    inchToPix(4f)); // leave min and max alone!
-        // left middle, move left
-        text("left", inchToPix(.4f), height / 2);
-        if (mousePressed && dist(0, height / 2, mouseX, mouseY) <
-                inchToPix(.8f))
-            logoX -= inchToPix(.02f);
-        text("right", width - inchToPix(.4f), height / 2);
-        if (mousePressed && dist(width, height / 2, mouseX, mouseY) <
-                inchToPix(.8f))
-            logoX += inchToPix(.02f);
-        text("up", width / 2, inchToPix(.4f));
-        if (mousePressed && dist(width / 2, 0, mouseX, mouseY) <
-                inchToPix(.8f))
-            logoY -= inchToPix(.02f);
-        text("down", width / 2, height - inchToPix(.4f));
-        if (mousePressed && dist(width / 2, height, mouseX, mouseY) <
-                inchToPix(.8f))
-            logoY += inchToPix(.02f);
+                     inchToPix(4f));
+        }
+
+        switch (key) {
+            case ' ':
+                logoZ = constrain(logoZ + inchToPix(.02f), (float) .01,
+                     inchToPix(4f));
+                break;
+        
+            default:
+                break;
+        }
     }
+    // // my example design for control, which is terrible
+    // void scaffoldControlLogic() {
+    //     // upper left corner, rotate counterclockwise
+    //     text("CCW", inchToPix(.4f), inchToPix(.4f));
+    //     if (mousePressed && dist(0, 0, mouseX, mouseY) < inchToPix(.8f))
+    //         logoRotation--;
+    //     // upper right corner, rotate clockwise
+    //     text("CW", width - inchToPix(.4f), inchToPix(.4f));
+    //     if (mousePressed && dist(width, 0, mouseX, mouseY) < inchToPix(.8f))
+    //         logoRotation++;
+    //     // lower left corner, decrease Z
+    //     text("-", inchToPix(.4f), height - inchToPix(.4f));
+    //     if (mousePressed && dist(0, height, mouseX, mouseY) < inchToPix(.8f))
+    //         logoZ = constrain(logoZ - inchToPix(.02f), (float) .01,
+    //                 inchToPix(4f)); // leave min and max alone!
+    //     // lower right corner, increase Z
+    //     text("+", width - inchToPix(.4f), height - inchToPix(.4f));
+    //     if (mousePressed && dist(width, height, mouseX, mouseY) <
+    //             inchToPix(.8f))
+    //         logoZ = constrain(logoZ + inchToPix(.02f), (float) .01,
+    //                 inchToPix(4f)); // leave min and max alone!
+    //     // left middle, move left
+    //     text("left", inchToPix(.4f), height / 2);
+    //     if (mousePressed && dist(0, height / 2, mouseX, mouseY) <
+    //             inchToPix(.8f))
+    //         logoX -= inchToPix(.02f);
+    //     text("right", width - inchToPix(.4f), height / 2);
+    //     if (mousePressed && dist(width, height / 2, mouseX, mouseY) <
+    //             inchToPix(.8f))
+    //         logoX += inchToPix(.02f);
+    //     text("up", width / 2, inchToPix(.4f));
+    //     if (mousePressed && dist(width / 2, 0, mouseX, mouseY) <
+    //             inchToPix(.8f))
+    //         logoY -= inchToPix(.02f);
+    //     text("down", width / 2, height - inchToPix(.4f));
+    //     if (mousePressed && dist(width / 2, height, mouseX, mouseY) <
+    //             inchToPix(.8f))
+    //         logoY += inchToPix(.02f);
+    // }
     public void mousePressed() {
         if (startTime == 0) // start time on the instant of the first user click
         {
