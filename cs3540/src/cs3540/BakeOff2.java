@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import processing.core.PApplet;
 public class BakeOff2 extends PApplet {
+
+    
     // these are variables you should probably leave alone
     int index = 0; // starts at zero-ith trial
     float border = 0; // some padding from the sides of window, set later
