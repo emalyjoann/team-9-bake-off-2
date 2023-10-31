@@ -168,6 +168,15 @@ public class BakeOff2 extends PApplet {
             }
         }
     }
+
+    public void keyPressed() {
+        if (key == 'q') {
+            logoRotation--; // Rotate the square counter-clockwise when 'q' is pressed
+        } else if (key == 'e') {
+            logoRotation++; // Rotate the square clockwise when 'e' is pressed
+        }
+    }
+
     // probably shouldn't modify this, but email me if you want to for some good reason.
     public boolean checkForSuccess() {
         Destination d = destinations.get(trialIndex);
