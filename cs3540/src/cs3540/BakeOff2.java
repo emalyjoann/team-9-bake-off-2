@@ -18,6 +18,8 @@ public class BakeOff2 extends PApplet {
     // you can test this by drawing a 72x72 pixel rectangle in code, and then
     // confirming with a ruler it is 1x1 inch.
 
+    boolean keyHeld = false;
+    
     // These variables are for my example design. Your input code should
     // modify/replace these!
     float logoX = 500;
@@ -46,6 +48,7 @@ public class BakeOff2 extends PApplet {
         rectMode(CENTER); // draw rectangles not from upper left, but from the center outwards
         // don't change this!
         border = inchToPix(2f); // padding of 1.0 inches
+        
         for (int i = 0; i < trialCount; i++) // don't change this!
         {
             Destination d = new Destination();
@@ -64,6 +67,11 @@ public class BakeOff2 extends PApplet {
         background(40); // background is dark grey
         fill(200);
         noStroke();
+        
+        Destination currentDestination = destinations.get(trialIndex); // the current destination square to be filled
+        float destX = currentDestination.x;
+        float destY = currentDestination.y;
+        
         // shouldn't really modify this printout code unless there is a really good reason to
         if (userDone) {
             text("User completed " + trialCount + " trials", width / 2,
@@ -87,9 +95,16 @@ public class BakeOff2 extends PApplet {
             translate(d.x, d.y); // center the drawing coordinates to the center of the destination trial
             rotate(radians(d.rotation)); // rotate around the origin of the destination trial
             noFill();
-            strokeWeight(3f);
-            if (trialIndex == i)
-                stroke(255, 0, 0, 192); // set color to semi translucent
+            strokeWeight(3f); 
+            
+            
+            //change the color of the outline to green if the current logo is successfully filling the outline.
+            if (trialIndex == i) {
+            	stroke(255, 0, 0, 192);
+            	if (checkForSuccessNoPrints()){
+            		stroke(0, 255, 0, 192);
+            	}            	
+            }
             else
                 stroke(128, 128, 128, 128); // set color to semi-translucent
             rect(0, 0, d.z, d.z);
@@ -105,49 +120,24 @@ public class BakeOff2 extends PApplet {
         popMatrix();
         // ===========DRAW EXAMPLE CONTROLS=================
         fill(255);
-        scaffoldControlLogic(); // you are going to want to replace this!
+        
         text("Trial " + (trialIndex + 1) + " of " + trialCount, width / 2,
                 inchToPix(.8f));
+        
+        //Draw lines between the logo square and square to be filled
+        stroke(0, 255, 0, 192); 
+        strokeWeight(2);
+        line(logoX, logoY, logoX, destY);
+        line(logoX, destY, destX, destY);
+        
+        //draw a circle if the logo x and logo y is centered
+        if (Math.abs(logoX - destX) <= 3 && Math.abs(logoY - destY) <= 3) {
+        	fill(255, 0, 0);  // Setting circle color to red, for visibility
+        	ellipse(destX, destY, 10, 10);
+        	return;
+        }
     }
-    // my example design for control, which is terrible
-    void scaffoldControlLogic() {
-        // upper left corner, rotate counterclockwise
-        text("CCW", inchToPix(.4f), inchToPix(.4f));
-        if (mousePressed && dist(0, 0, mouseX, mouseY) < inchToPix(.8f))
-            logoRotation--;
-        // upper right corner, rotate clockwise
-        text("CW", width - inchToPix(.4f), inchToPix(.4f));
-        if (mousePressed && dist(width, 0, mouseX, mouseY) < inchToPix(.8f))
-            logoRotation++;
-        // lower left corner, decrease Z
-        text("-", inchToPix(.4f), height - inchToPix(.4f));
-        if (mousePressed && dist(0, height, mouseX, mouseY) < inchToPix(.8f))
-            logoZ = constrain(logoZ - inchToPix(.02f), (float) .01,
-                    inchToPix(4f)); // leave min and max alone!
-        // lower right corner, increase Z
-        text("+", width - inchToPix(.4f), height - inchToPix(.4f));
-        if (mousePressed && dist(width, height, mouseX, mouseY) <
-                inchToPix(.8f))
-            logoZ = constrain(logoZ + inchToPix(.02f), (float) .01,
-                    inchToPix(4f)); // leave min and max alone!
-        // left middle, move left
-        text("left", inchToPix(.4f), height / 2);
-        if (mousePressed && dist(0, height / 2, mouseX, mouseY) <
-                inchToPix(.8f))
-            logoX -= inchToPix(.02f);
-        text("right", width - inchToPix(.4f), height / 2);
-        if (mousePressed && dist(width, height / 2, mouseX, mouseY) <
-                inchToPix(.8f))
-            logoX += inchToPix(.02f);
-        text("up", width / 2, inchToPix(.4f));
-        if (mousePressed && dist(width / 2, 0, mouseX, mouseY) <
-                inchToPix(.8f))
-            logoY -= inchToPix(.02f);
-        text("down", width / 2, height - inchToPix(.4f));
-        if (mousePressed && dist(width / 2, height, mouseX, mouseY) <
-                inchToPix(.8f))
-            logoY += inchToPix(.02f);
-    }
+    
     public void mousePressed() {
         if (startTime == 0) // start time on the instant of the first user click
         {
@@ -169,13 +159,30 @@ public class BakeOff2 extends PApplet {
         }
     }
 
-    public void keyPressed() {
-        if (key == 'q') {
-            logoRotation--; // Rotate the square counter-clockwise when 'q' is pressed
-        } else if (key == 'e') {
-            logoRotation++; // Rotate the square clockwise when 'e' is pressed
-        }
-    }
+	public void keyPressed() {
+		
+		if (key == 'q') {
+			logoRotation = logoRotation - 4;
+		} else if (key == 'e') {
+			logoRotation = logoRotation + 4;
+		} else if (key == 'w') {
+			if (logoY - inchToPix(.08f) >= 0) {
+				logoY -= inchToPix(.08f);
+			}
+		} else if (key == 'a') {
+			if (logoX - inchToPix(.08f) >= 0) {
+				logoX -= inchToPix(.08f);
+			}
+		} else if (key == 's') {
+			if (logoY + inchToPix(.08f) + 1.0f <= height) {
+				logoY += inchToPix(.08f);
+			}
+		} else if (key == 'd') {
+			if (logoX + inchToPix(.08f) + 1.0f <= width) {
+				logoX += inchToPix(.08f);
+			}
+		}
+	}
 
     // probably shouldn't modify this, but email me if you want to for some good reason.
     public boolean checkForSuccess() {
@@ -194,6 +201,19 @@ public class BakeOff2 extends PApplet {
         println("Close enough all: " + (closeDist && closeRotation && closeZ));
         return closeDist && closeRotation && closeZ;
     }
+    
+    //checks for success but doesn't print the values and fill the console
+    public boolean checkForSuccessNoPrints() {
+        Destination d = destinations.get(trialIndex);
+        boolean closeDist = dist(d.x, d.y, logoX, logoY) < inchToPix(.05f); //has to be within +-0.05"
+        boolean closeRotation = calculateDifferenceBetweenAngles(d.rotation,
+                logoRotation) <= 5;
+        boolean closeZ = abs(d.z - logoZ) < inchToPix(.1f); // has to be within +-0.1"
+     
+        
+        return closeDist && closeRotation && closeZ;
+    }
+    
     // utility function I include to calc difference between two angles
     double calculateDifferenceBetweenAngles(float a1, float a2) {
         double diff = abs(a1 - a2);
