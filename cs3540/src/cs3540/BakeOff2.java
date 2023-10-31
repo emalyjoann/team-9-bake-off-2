@@ -123,7 +123,6 @@ public class BakeOff2 extends PApplet {
         popMatrix();
         // ===========DRAW EXAMPLE CONTROLS=================
         fill(255);
-        keyPressed();
         text("Trial " + (trialIndex + 1) + " of " + trialCount, width / 2,
                 inchToPix(.8f));
         
@@ -143,21 +142,27 @@ public class BakeOff2 extends PApplet {
 
     public void keyPressed()
     {
-        if(keyPressed && keyCode == SHIFT)
+        if(keyCode == '[')
         {
             logoZ = constrain(logoZ - inchToPix(.02f), (float) .01,
-                     inchToPix(4f));
+                    inchToPix(4f));
         }
-        switch (key) {
-            case ' ':
-                logoZ = constrain(logoZ + inchToPix(.02f), (float) .01,
-                     inchToPix(4f));
-                break;
-        
-            default:
-                break;
+        else if (key == ENTER || key == ' ')
+        {
+            if (userDone == false && !checkForSuccess())
+                errorCount++;
+            trialIndex++; // and move on to next trial
+            if (trialIndex == trialCount && userDone == false) {
+                userDone = true;
+                finishTime = millis();
+            }
         }
-        if (key == 'q') {
+        else if (key == ']')
+        {
+            logoZ = constrain(logoZ + inchToPix(.02f), (float) .01,
+                    inchToPix(4f));
+        }
+        else if (key == 'q') {
             logoRotation = logoRotation - 4;
         } else if (key == 'e') {
             logoRotation = logoRotation + 4;
